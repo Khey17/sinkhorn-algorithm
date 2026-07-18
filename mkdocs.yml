@@ -61,7 +61,7 @@ extra_css:
 nav:
   - Home: index.md
   - Notes:
-    - 00. Recap — Monge & Kantorovich: 00_recap_ot.md
+    - "00. Recap: Monge & Kantorovich": 00_recap_ot.md
     - 01. Entropy & Sinkhorn: 01_entropy_sinkhorn.md
   - Demo:
     - 02. Sinkhorn notebook: 02_sinkhorn_demo.ipynb
