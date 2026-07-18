@@ -2,3 +2,9 @@
 .md-typeset h1 { font-weight: 700; }
 .md-typeset .admonition.note { border-left-color: #3f51b5; }
 table.outline td:first-child { white-space: nowrap; font-weight: 600; }
+
+/* Near-black top navbar (Material primary: black + backup) */
+.md-header,
+.md-tabs {
+  background-color: #0d0d0d !important;
+}

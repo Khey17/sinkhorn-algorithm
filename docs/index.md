@@ -1,8 +1,6 @@
 # Sinkhorn Algorithm Notes
 
-Foundational notes and runnable demos on **entropic optimal transport** and the **Sinkhorn algorithm**, from a Computational Optimal Transport reading seminar (Summer 2026).
-
-This is a working notebook + field notes site — not a textbook. I’m learning this material and writing down what clicked.
+Some notes and runnable demos on **entropic optimal transport** and the **Sinkhorn algorithm**, from a Computational Optimal Transport reading seminar (Summer 2026).
 
 !!! note "What this is"
     Companion notes to Peyré & Cuturi, *Computational Optimal Transport* ([arXiv:1803.00567](https://arxiv.org/abs/1803.00567)), focused on the entropy / Sinkhorn chapter. Code uses [POT](https://pythonot.github.io/).
@@ -18,16 +16,12 @@ This is a working notebook + field notes site — not a textbook. I’m learning
 
 ## About these notes
 
-### Who is this for?
-
-**You:** comfortable with basic linear algebra / probability, curious about OT, and okay reading a Jupyter notebook.
-
-**This site:** walks through the foundations — Monge → Kantorovich → entropic OT → Sinkhorn — with small examples and plots.
+**The notebook:** walks you through the foundations of Monge → Kantorovich → entropic OT → Sinkhorn, with small examples and plots.
 
 ### How to use it
 
-1. Skim **00** and **01** for the story in the notes.  
-2. Run (or read) the **02** notebook — same story, executable.  
+1. Go through **00** and **01** for a quick understanding.  
+2. Run the **02** notebook or jsut take a peak at the plots to understand the implementation.  
 3. Play with the **ε slider** to feel the blur trade-off.
 
 ### Source
