@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Entropic coupling — ε slider</title>
+  <style>
+    :root {
+      --text-secondary: #5f5e5a;
+      --text-muted: #888780;
+      --surface-1: #f3f2ed;
+      --radius: 10px;
+    }
+    body {
+      font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+      max-width: 720px;
+      margin: 2rem auto;
+      padding: 0 1rem 3rem;
+      color: #1a1a18;
+      background: #faf9f5;
+      line-height: 1.45;
+    }
+    h1 { font-size: 1.4rem; font-weight: 600; margin-bottom: 0.25rem; }
+    .sub { color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 1.25rem; }
+    a { color: #0b57d0; }
+  </style>
+</head>
+<body>
+  <h1>Entropic coupling</h1>
+  <p class="sub">Interactive view of how ε blurs the transport plan while margins stay fixed.
+  <a href="../">← back to site</a></p>
+<h2 class="sr-only">An interactive heatmap of a transport plan between a narrow green source bell on the x-axis and a wider red target bell on the y-axis. As epsilon increases, the sharp diagonal plan blurs into a wide band, while the green and red margins stay fixed.</h2>
+<div style="display:flex;align-items:center;gap:12px;margin:0 0 0.5rem;">
+  <label style="font-size:14px;color:var(--text-secondary);min-width:14px;">ε</label>
+  <input type="range" min="0" max="100" value="6" id="eps" style="flex:1;">
+  <span style="font-size:14px;font-weight:500;min-width:64px;text-align:right;" id="eps-out"></span>
+</div>
+<div style="font-size:13px;color:var(--text-secondary);margin:0 0 0.75rem;">left ← sharp (exact P) · blurry (P<sup>ε</sup>) → right</div>
+<div style="display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start;">
+  <canvas id="plot" style="flex:0 0 auto;"></canvas>
+  <div style="display:flex;flex-direction:column;gap:10px;min-width:150px;flex:1;">
+    <div style="background:var(--surface-1);border-radius:var(--radius);padding:0.75rem 1rem;">
+      <div style="font-size:13px;color:var(--text-secondary);">transport cost ⟨C, P⟩</div>
+      <div style="font-size:22px;font-weight:500;" id="cost"></div>
+      <div style="font-size:12px;color:var(--text-muted);">↑ as ε grows = you pay more</div>
+    </div>
+    <div style="background:var(--surface-1);border-radius:var(--radius);padding:0.75rem 1rem;">
+      <div style="font-size:13px;color:var(--text-secondary);">spread H(P)</div>
+      <div style="font-size:22px;font-weight:500;" id="ent"></div>
+      <div style="font-size:12px;color:var(--text-muted);">↑ as ε grows = blurrier</div>
+    </div>
+    <div style="font-size:13px;color:var(--text-secondary);line-height:1.5;">
+      green <span style="color:#1D9E75;">a</span> and red <span style="color:#D85A30;">b</span> never move — only the inside blurs.
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  const n=44, W=400, H=400, Lm=46, Bm=46, pad=10;
+  const plotW=W-Lm-pad, plotH=H-pad-Bm, cell=plotW/n;
+  const cv=document.getElementById('plot');
+  const epsEl=document.getElementById('eps'), epsOut=document.getElementById('eps-out');
+  const costEl=document.getElementById('cost'), entEl=document.getElementById('ent');
+  const xs=new Float64Array(n);
+  for(let i=0;i<n;i++) xs[i]=i/(n-1);
+  function gauss(t,m,s){return Math.exp(-((t-m)*(t-m))/(2*s*s));}
+  const a=new Float64Array(n), b=new Float64Array(n);
+  let sa=0,sb=0;
+  for(let i=0;i<n;i++){a[i]=gauss(xs[i],0.30,0.07);sa+=a[i];b[i]=gauss(xs[i],0.64,0.13);sb+=b[i];}
+  for(let i=0;i<n;i++){a[i]/=sa;b[i]/=sb;}
+  const maxA=Math.max(...a), maxB=Math.max(...b);
+  const C=new Float64Array(n*n);
+  for(let i=0;i<n;i++)for(let j=0;j<n;j++){const d=xs[i]-xs[j];C[i*n+j]=d*d;}
+  function epsFor(s){const lo=Math.log10(7e-4),hi=Math.log10(7e-2);return Math.pow(10,lo+(s/100)*(hi-lo));}
+  const K=new Float64Array(n*n), P=new Float64Array(n*n);
+  const u=new Float64Array(n), v=new Float64Array(n);
+  function solve(eps){
+    for(let k=0;k<n*n;k++)K[k]=Math.exp(-C[k]/eps);
+    u.fill(1);v.fill(1);
+    for(let it=0;it<90;it++){
+      for(let i=0;i<n;i++){let s=0;const r=i*n;for(let j=0;j<n;j++)s+=K[r+j]*v[j];u[i]=a[i]/(s+1e-300);}
+      for(let j=0;j<n;j++){let s=0;for(let i=0;i<n;i++)s+=K[i*n+j]*u[i];v[j]=b[j]/(s+1e-300);}
+    }
+    let cost=0,ent=0,maxP=0;
+    for(let i=0;i<n;i++)for(let j=0;j<n;j++){const p=u[i]*K[i*n+j]*v[j];P[i*n+j]=p;cost+=p*C[i*n+j];if(p>1e-12)ent+=-p*(Math.log(p)-1);if(p>maxP)maxP=p;}
+    return {cost,ent,maxP};
+  }
+  function resize(){
+    const dpr=window.devicePixelRatio||1;
+    cv.width=W*dpr;cv.height=H*dpr;cv.style.width=W+'px';cv.style.height=H+'px';
+    const ctx=cv.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);return ctx;
+  }
+  function draw(){
+    const eps=epsFor(+epsEl.value);
+    epsOut.textContent=eps.toExponential(1);
+    const {cost,ent,maxP}=solve(eps);
+    costEl.textContent=cost.toFixed(4);
+    entEl.textContent=ent.toFixed(2);
+    const css=getComputedStyle(document.documentElement);
+    const tcol=(css.getPropertyValue('--text-muted')||'#888').trim();
+    const ctx=resize();ctx.clearRect(0,0,W,H);
+    for(let i=0;i<n;i++)for(let j=0;j<n;j++){
+      const al=Math.min(1,Math.sqrt(P[i*n+j]/maxP));
+      if(al<0.01)continue;
+      ctx.fillStyle='rgba(29,158,117,'+al+')';
+      ctx.fillRect(Lm+i*cell, pad+(n-1-j)*cell, cell+0.5, cell+0.5);
+    }
+    ctx.strokeStyle='rgba(136,135,128,0.4)';ctx.lineWidth=0.5;
+    ctx.strokeRect(Lm,pad,plotW,plotH);
+    ctx.strokeStyle='#1D9E75';ctx.lineWidth=2;ctx.beginPath();
+    for(let i=0;i<n;i++){const x=Lm+i*cell+cell/2;const y=H-8-(a[i]/maxA)*(Bm-14);i?ctx.lineTo(x,y):ctx.moveTo(x,y);}
+    ctx.stroke();
+    ctx.strokeStyle='#D85A30';ctx.lineWidth=2;ctx.beginPath();
+    for(let j=0;j<n;j++){const y=pad+(n-1-j)*cell+cell/2;const x=Lm-6-(b[j]/maxB)*(Lm-14);j?ctx.lineTo(x,y):ctx.moveTo(x,y);}
+    ctx.stroke();
+    ctx.fillStyle=tcol;ctx.font='12px sans-serif';
+    ctx.fillText('source a (green)',Lm,H-2);
+    ctx.fillText('target b (red)',2,pad+8);
+  }
+  epsEl.addEventListener('input',draw);
+  draw();
+})();
+</script>
+</body>
+</html>

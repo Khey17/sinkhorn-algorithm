@@ -1,0 +1,69 @@
+site_name: Sinkhorn Algorithm Notes
+site_description: Foundational notes and demos on entropic optimal transport and the Sinkhorn algorithm
+site_url: https://khey17.github.io/sinkhorn-algorithm/
+repo_url: https://github.com/Khey17/sinkhorn-algorithm
+repo_name: Khey17/sinkhorn-algorithm
+edit_uri: ""
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.sections
+    - navigation.top
+    - navigation.indexes
+    - search.suggest
+    - content.code.copy
+    - toc.follow
+  font:
+    text: Roboto
+    code: Roboto Mono
+
+plugins:
+  - search
+  - mkdocs-jupyter:
+      execute: true
+      allow_errors: false
+      include_source: true
+      ignore_h1_titles: true
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.arithmatex:
+      generic: true
+  - tables
+  - toc:
+      permalink: true
+  - attr_list
+  - md_in_html
+
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+
+extra_css:
+  - stylesheets/extra.css
+
+nav:
+  - Home: index.md
+  - Notes:
+    - 00. Recap — Monge & Kantorovich: 00_recap_ot.md
+    - 01. Entropy & Sinkhorn: 01_entropy_sinkhorn.md
+  - Demo:
+    - 02. Sinkhorn notebook: 02_sinkhorn_demo.ipynb
+    - Interactive ε slider: epsilon_slider.md
+  - Resources: resources.md

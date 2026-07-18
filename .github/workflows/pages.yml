@@ -1,4 +1,4 @@
-name: Publish notebook to GitHub Pages
+name: Publish site to GitHub Pages
 
 on:
   push:
@@ -18,11 +18,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
           cache: pip
@@ -32,22 +30,13 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Execute notebook → HTML
-        run: |
-          mkdir -p _site
-          jupyter nbconvert \
-            --to html \
-            --execute \
-            --ExecutePreprocessor.timeout=600 \
-            --output-dir=_site \
-            --output=index \
-            notebooks/sinkhorn_OT_demo.ipynb
-          cp assets/epsilon_slider.html _site/epsilon_slider.html
+      - name: Build MkDocs site
+        run: mkdocs build
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: _site
+          path: site
 
   deploy:
     needs: build
@@ -56,6 +45,5 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
+      - id: deployment
         uses: actions/deploy-pages@v4

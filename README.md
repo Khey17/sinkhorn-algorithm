@@ -1,29 +1,25 @@
-# Sinkhorn Algorithm — Entropic Optimal Transport
+# Sinkhorn Algorithm Notes
 
-Demonstration and notes on the **Sinkhorn algorithm** for entropic optimal transport, from the Computational Optimal Transport reading seminar (Summer 2026).
+Foundational notes and demos on entropic optimal transport / Sinkhorn, from a Computational Optimal Transport reading seminar (Summer 2026).
 
-**Live notebook:** [khey17.github.io/sinkhorn-algorithm](https://khey17.github.io/sinkhorn-algorithm/)
+**Site:** [khey17.github.io/sinkhorn-algorithm](https://khey17.github.io/sinkhorn-algorithm/)
 
-## What’s here
+This is a working-notes site (not an expert guide). Main reference: Peyré & Cuturi ([arXiv:1803.00567](https://arxiv.org/abs/1803.00567)).
 
-| Path | Description |
-|------|-------------|
-| [`notebooks/sinkhorn_OT_demo.ipynb`](notebooks/sinkhorn_OT_demo.ipynb) | Main demo: Sinkhorn from scratch, vs POT, ε-sweep, oscillation, 2D transport |
-| [`notes/`](notes/) | Handwritten notes (Exact OT → Entropy → Sinkhorn) |
-| [`assets/`](assets/) | Interactive ε slider (HTML) and Monge vs Kantorovich sketch |
+## Outline
 
-## Main reference
+| Path | What |
+|------|------|
+| `docs/` | MkDocs site (home, notes chapters, notebook) |
+| `notebooks/sinkhorn_OT_demo.ipynb` | Runnable Sinkhorn demo |
+| `notes/` | Handwritten PDFs |
+| `assets/` | ε slider + sketches |
 
-Gabriel Peyré & Marco Cuturi, *Computational Optimal Transport* ([arXiv:1803.00567](https://arxiv.org/abs/1803.00567)).
-
-## Run locally
+## Local
 
 ```bash
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
+mkdocs serve          # site preview
 jupyter notebook notebooks/sinkhorn_OT_demo.ipynb
 ```
-
-## Publish
-
-Pushing to `main` runs GitHub Actions: execute the notebook → HTML → deploy to GitHub Pages.

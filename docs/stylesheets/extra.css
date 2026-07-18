@@ -1,0 +1,4 @@
+/* Small polish for notebook + notes pages */
+.md-typeset h1 { font-weight: 700; }
+.md-typeset .admonition.note { border-left-color: #3f51b5; }
+table.outline td:first-child { white-space: nowrap; font-weight: 600; }

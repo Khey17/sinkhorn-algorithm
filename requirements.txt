@@ -5,3 +5,5 @@ jupyter
 nbconvert
 ipykernel
 ipython
+mkdocs-material
+mkdocs-jupyter
