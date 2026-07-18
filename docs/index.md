@@ -9,7 +9,7 @@ Some notes and runnable demos on **entropic optimal transport** and the **Sinkho
 
 | Section | What it covers |
 |---|---|
-| [00. Recap — Monge & Kantorovich](00_recap_ot.md) | Map vs coupling, duality, discrete LP view |
+| [00. Recap: Monge & Kantorovich](00_recap_ot.md) | Map vs coupling, duality, discrete LP view |
 | [01. Entropy & Sinkhorn](01_entropy_sinkhorn.md) | Why blur the plan, $-\varepsilon H$, Sinkhorn updates |
 | [02. Sinkhorn notebook](02_sinkhorn_demo.ipynb) | From-scratch Sinkhorn, vs POT, demos, takeaways |
 | [Interactive ε slider](epsilon_slider.md) | Watch the plan go blurry ↔ sharp |
