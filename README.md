@@ -4,7 +4,7 @@ Foundational notes and demos on entropic optimal transport / Sinkhorn, from a Co
 
 **Site:** [khey17.github.io/sinkhorn-algorithm](https://khey17.github.io/sinkhorn-algorithm/)
 
-This is a working-notes site (not an expert guide). Main reference: Peyré & Cuturi ([arXiv:1803.00567](https://arxiv.org/abs/1803.00567)).
+Main reference: Peyré & Cuturi ([arXiv:1803.00567](https://arxiv.org/abs/1803.00567)).
 
 ## Outline
 
